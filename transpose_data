@@ -1,0 +1,23 @@
+import glob
+import pandas as pd
+import numpy as np
+path = '/Users/nathanaelsims/PycharmProjects/pythonBMRSnew/Extract 2020-2022'
+csv_files = glob.glob(path + "/*.csv")
+df_list = (pd.read_csv(file) for file in csv_files)
+df_all   = pd.concat(df_list, ignore_index=True)
+df_all = df_all[['local_datetime', 'nGCBMUnitID', 'quantity']]
+df_all['local_datetime'] = df_all['local_datetime'].str[:-6]
+all_bmu = pd.read_csv('/Users/nathanaelsims/Downloads/bm_unit_to_oc2_zone_mapping2.csv')
+df_all = pd.merge(df_all, all_bmu, on='nGCBMUnitID', how='left')
+df_all['nGCBMUnitID1'] = df_all['nGCBMUnitID'].astype(str) + ' - ' + df_all['Name'].astype(str)
+df_all.drop(columns=['nGCBMUnitID', 'Name'])
+p = df_all.pivot_table(index='local_datetime', columns='nGCBMUnitID1', values='quantity', aggfunc=np.sum)
+p.fillna(value=0.0,inplace=True)
+p['Total'] = p.sum(axis=1, numeric_only = True)
+# print(p2.head(5))
+# print(p.dtypes, all_bmu.dtypes)
+# p['nGCBMUnitID'].astype(str)
+# all_bmu['nGCBMUnitID'].astype(str)
+# print(all_bmu.dtypes, df_all.dtypes)
+
+p.to_csv('/Users/nathanaelsims/Downloads/Extract_B1610_w_Total6.csv')
