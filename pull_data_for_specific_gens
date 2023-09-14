@@ -1,0 +1,15 @@
+from ElexonDataPortal import api
+from datetime import datetime, date, timedelta
+client = api.Client('jijs8vduwlhp8me')
+for x in range(1,100):
+    initial_date = '2022-12-20'
+    start_date = datetime.strptime(initial_date,'%Y-%m-%d')
+    start_date_1 = start_date + timedelta(days=1*x)
+    end_date_1 = start_date_1 + timedelta(days=1)
+    df_B1610: object = client.get_B1610(start_date_1, end_date_1)
+    #df_B1610 = df_B1610[df_B1610['nGCBMUnitID'].str.contains('HMGTO|RCBK|EAAO|LARYW|RMPN|PNYCW|GYMR|RREW|RRWW|DDGN|SHRS|TKN')]
+    #List_BMRS = df_B1610.iloc[:,[0,1,12,13,14,20,21]]
+    #df_B1610.to_csv('Elexon_API_01Jan21 pus {} days.csv'.format(str(x-1)))
+    df_B1610.to_csv('Elexon_B1610_{}.csv'.format(str(start_date_1.day) + '-' + str(start_date_1.month) + '-' + str(start_date_1.year)))
+    #, sep='\t', encoding='utf-8')
+    print('Completed ' + str(start_date_1.day) + '-' + str(start_date_1.month) + '-' + str(start_date_1.year) +'. Delta ' + str(x))
