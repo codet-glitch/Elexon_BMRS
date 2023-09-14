@@ -1,0 +1,47 @@
+import pandas as pd
+import requests
+
+locations = [
+    {'latitude': 54.978116, 'longitude': 1.888506, 'name': 'Dogger_B'},
+    {'latitude': 55.044649, 'longitude': 2.393432, 'name': 'Sofia'},
+    {'latitude': 55.075712, 'longitude': 2.772925, 'name': 'Dogger_C'},
+    {'latitude': 54.738439, 'longitude': 2.170682, 'name': 'Dogger_A'},
+    {'latitude': 54.569868, 'longitude': 1.593211, 'name': 'R4_1'},
+    {'latitude': 54.396135, 'longitude': 2.131963, 'name': 'R4_2'},
+    {'latitude': 54.058758, 'longitude': 1.231595, 'name': 'hornsea4'},
+    {'latitude': 53.946756, 'longitude': 1.480953, 'name': 'hornsea2'},
+    {'latitude': 53.927791, 'longitude': 1.726764, 'name': 'hornsea1'},
+    {'latitude': 53.767666, 'longitude': 2.580745, 'name': 'Hornsea3_SE'},
+    {'latitude': 54.02431, 'longitude': 2.493123, 'name': 'Hornsea3_NW'},
+    {'latitude': 53.810403, 'longitude': 0.158132, 'name': 'westermost'},
+    {'latitude': 53.650853, 'longitude': 0.31505, 'name': 'humb_gateway'},
+    {'latitude': 53.558951, 'longitude': 0.806979, 'name': 'triton_knoll'},
+    {'latitude': 53.58529, 'longitude': 1.442728, 'name': 'R4_3'},
+    {'latitude': 53.18088, 'longitude': 0.469286, 'name': 'Lincs'},
+    {'latitude': 53.291875, 'longitude': 0.832244, 'name': 'race_bank'},
+    {'latitude': 53.104714, 'longitude': 2.953208, 'name': 'Boreas'},
+    {'latitude': 52.920103, 'longitude': 2.987796, 'name': 'Vanguard_E'},
+    {'latitude': 52.833147, 'longitude': 2.344027, 'name': 'Vanguard_W'},
+    {'latitude': 52.599581, 'longitude': 2.813736, 'name': 'EA3'},
+    {'latitude': 52.15256, 'longitude': 2.092856, 'name': 'EA2'},
+    {'latitude': 51.964319, 'longitude': 1.88213, 'name': 'Gr_Gabbard_NW'},
+    {'latitude': 51.804837, 'longitude': 2.138316, 'name': 'Five_Est_SE'},
+    {'latitude': 51.630852, 'longitude': 1.600079, 'name': 'London_Array'},
+    {'latitude': 51.418537, 'longitude': 1.670518, 'name': 'Thanet'},
+    {'latitude': 50.67197, 'longitude': -0.261736, 'name': 'Rampion'},
+    {'latitude': 53.485902, 'longitude': -3.282377, 'name': 'Burbo_Bank_And_Extn'},
+    {'latitude': 53.446206, 'longitude': -3.5891, 'name': 'Gywnt_Y_Mor'},
+    {'latitude': 53.987822, 'longitude': -3.39988, 'name': 'WODS'},
+    {'latitude': 54.070775, 'longitude': -3.638554, 'name': 'Walney'},
+    {'latitude': 53.988551, 'longitude': -4.005729, 'name': 'R4_6'},
+    {'latitude': 53.738466, 'longitude': -3.935525, 'name': 'R4_4'},
+]
+for i, loc in enumerate(locations):
+    url = f"https://archive-api.open-meteo.com/v1/archive?latitude={loc['latitude']}&longitude={loc['longitude']}&start_date=2020-01-01&end_date=2022-12-31&hourly=windspeed_10m,windspeed_100m&windspeed_unit=ms"
+    response = requests.get(url)
+    data = response.json()
+    df = pd.DataFrame(data['hourly'])
+    #filename = f"WindData_Lat_{loc['latitude']}/Long_{loc['longitude']}.csv"
+    filename = f"WindData_{loc['name']}_Lat_{loc['latitude']}_Long_{loc['longitude']}.csv"
+    #filename = f"Data_{i}.csv"
+    df.to_csv(filename, index=False)
